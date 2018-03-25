@@ -106,3 +106,13 @@
 .column-item-title{
     padding-right: 8px;
 }
+
+
+/* 칼럼(나중에 옮겨야 됨) */
+.column-content{
+    box-sizing: border-box;
+    width: 100%;
+    padding: 42px;
+    background-color: #fff;
+    border-radius: 5px;
+}
