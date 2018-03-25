@@ -1,0 +1,98 @@
+@charset "utf-8";
+
+.title-text{
+    text-align: center;
+    font-size: 63px;
+    color: white;
+    text-shadow: 4px 4px 6px rgba(0,0,0,0.12);
+}
+.todo-wrapper{
+    width: 100%;
+    max-width: 640px;
+    margin: auto;
+}
+
+/* 입력 영역 */
+.todo-insert-wrapper{
+    padding: 46px;
+    text-align: center;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 4px 6px 12px rgba(0,0,0,0.54);
+}
+.todo-insert-input{
+    background-color: inherit;
+    border: 0;
+    border-bottom: 1px solid rgb(18, 8, 41);
+    font-size: 16px;
+    padding: 4px 8px;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.12);
+}
+.todo-insert-input:focus{
+    outline: none;
+    
+}
+.todo-insert-button{
+    background-image: none;
+    background-color: rgb(64, 115, 224);
+    padding: 8px 12px;
+    color: #fff;
+    border: 0;
+    border-radius: 3px;
+    box-shadow: 1px 2px 2px rgba(0,0,0,0.21);
+    transition: all 0.1s ease;
+}
+.todo-insert-button:hover{
+    cursor: pointer;
+    box-shadow: 2px 4px 4px rgba(0,0,0,0.21);
+}
+
+/* 리스트 영역 */
+.todo-list-wrapper{
+    margin-top: 21px;
+    padding: 46px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 4px 6px 12px rgba(0,0,0,0.54);
+}
+.todo-list{
+    padding: 0;
+}
+.todo-list-item{
+    list-style: none;
+    padding: 4px 0;
+    margin: 8px 0;
+    font-weight: 400;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.12);
+    border-bottom: 1px solid #444;
+}
+.todo-list-item-title{
+    font-weight: 800;
+    color: #000;
+    margin-right: 12px;
+}
+.todo-list-item-content{
+    font-weight: 200;
+    color: #444;
+}
+.todo-list-item-remove{
+    float:right;
+    background-color: red;
+    color: #fff;
+    border: 0;
+    background-image: none;
+    padding: 3px 7px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.btn{
+    font-size: 18px;
+    text-align: center;
+}
+.btn:hover{
+    cursor: pointer;
+}
+.btn-wrapper{
+    padding: 21px 0;
+    text-align: center;
+}
