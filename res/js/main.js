@@ -1,41 +1,81 @@
 
 // 전역변수 선언
-var title = $('#inputTitle');
-var content = $('#inputContent');
+var inputTitle = $('#inputTitle');
+var inputContent = $('#inputContent');
 var saveBtn = $('#saveColumn');
+var colList = $('#colList');
+
+// 지금 몇시 몇분?
+function getNow(){
+    var now = new Date();
+    var year = now.getFullYear();
+    function getFullMonth(m){
+        if(m<10){
+            return '0'+m;
+        }else{
+            return m;
+        }
+    };
+    var month = getFullMonth(now.getMonth()+1);
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+
+    return year+'-'+month+'-'+date+' '+hour+':'+minute;
+}
 
 // 배열 선언
-var items = [];
+var itemsArr = [];
 
 // 새 게시물 등록
 function addNewCol(){
-    var titleVal = title.val();
-    var contentVal = content.val();
+    var titleVal = inputTitle.val();
+    var contentVal = inputContent.val();
 
     if (titleVal !== '' && contentVal !== ''){
         var item = {
-            seq: items.length,
+            seq: itemsArr.length,
             title: titleVal,
-            content: contentVal
+            content: contentVal,
+            date: getNow()
         }
+        itemsArr.push(item);
     
-        items.push(item);
-    
-        console.log(items);
+        console.log(itemsArr);
     }else{
         alert('내용을 입력해주세요!');
     }
+    saveItem();
 }
 
 saveBtn.click(addNewCol);
 
 
+function saveItem(){
+    localStorage.setItem('items', JSON.stringify(itemsArr));
+    renderItem();
+}
+
+function getTemplate(url, seq, title, date){
+    return '<li class="column-item"><a class="column-item-anchor" href="#"><div class="column-item-num"><span>'+seq+'</span></div><div class="column-item-title"><span>'+title+'</span></div><div class="column-item-date"><span>'+date+'</span></div></a></li>';
+}
+
+function renderItem(){
+    colList.html('');
+    var storedItems = JSON.parse(localStorage.getItem('items'));
+    storedItems.forEach(function(e){
+        colList.append(getTemplate(e.seq, e.title, e.date));
+    })
+}
+
+// var url = location.href;
+
+
 // 스토리지에 있는거 뿌려주는 로직
 
-function loadCol(){
-    localStorage.getItem
-        
-}
+// function loadCol(){
+//     localStorage.getItem
+// }
 
 // // 배열 선언
 //     var arrTitle = [];
