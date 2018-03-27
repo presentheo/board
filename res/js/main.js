@@ -57,25 +57,40 @@ function saveItem(){
 }
 
 function getTemplate(url, seq, title, date){
-    return '<li class="column-item"><a class="column-item-anchor" href="#"><div class="column-item-num"><span>'+seq+'</span></div><div class="column-item-title"><span>'+title+'</span></div><div class="column-item-date"><span>'+date+'</span></div></a></li>';
+    return '<li class="column-item"><a class="column-item-anchor" href="'+url+'"><div class="column-item-num"><span>'+seq+'</span></div><div class="column-item-title"><span>'+title+'</span></div><div class="column-item-date"><span>'+date+'</span></div></a></li>';
 }
 
 function renderItem(){
     colList.html('');
     var storedItems = JSON.parse(localStorage.getItem('items'));
     storedItems.forEach(function(e){
-        colList.append(getTemplate(e.seq, e.title, e.date));
+        colList.append(getTemplate(getUrl(e.seq), e.seq, e.title, e.date));
     })
 }
 
-// var url = location.href;
 
+function getUrl(n){
+    var url = window.location.href.replace('board.html', 'column.html');
+    return url+'?'+n;
+}
 
 // 스토리지에 있는거 뿌려주는 로직
 
-// function loadCol(){
-//     localStorage.getItem
-// }
+var colTitle = $('#colTitle');
+var colContent = $('#colContent');
+
+function loadCol(){
+    var url = window.location.href;
+    var seqNum = url.split('?')[1];
+    var item = JSON.parse(localStorage.getItem('items'))[seqNum];
+
+    colTitle.html(item.title);
+    colContent.html(item.content);
+}
+
+$(document).ready(function(){
+    loadCol();
+})
 
 // // 배열 선언
 //     var arrTitle = [];
