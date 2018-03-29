@@ -27,6 +27,8 @@ function getNow(){
 // 배열 선언
 var itemsArr = [];
 
+var index = 0;
+
 // 새 게시물 등록
 function addNewCol(){
     var titleVal = inputTitle.val();
@@ -34,18 +36,20 @@ function addNewCol(){
 
     if (titleVal !== '' && contentVal !== ''){
         var item = {
-            seq: itemsArr.length,
+            seq: index,
             title: titleVal,
             content: contentVal,
             date: getNow()
         }
+        index = index + 1;
         itemsArr.push(item);
     
         console.log(itemsArr);
+
+        saveItem();
     }else{
         alert('내용을 입력해주세요!');
     }
-    saveItem();
 }
 
 saveBtn.click(addNewCol);
@@ -71,7 +75,7 @@ function renderItem(){
 
 function getUrl(n){
     var url = window.location.href.replace('board.html', 'column.html');
-    return url+'?'+n;
+    return url+'?seq='+n;
 }
 
 // 스토리지에 있는거 뿌려주는 로직
@@ -81,7 +85,7 @@ var colContent = $('#colContent');
 
 function loadCol(){
     var url = window.location.href;
-    var seqNum = url.split('?')[1];
+    var seqNum = url.split('?seq=')[1];
     var item = JSON.parse(localStorage.getItem('items'))[seqNum];
 
     colTitle.html(item.title);
@@ -91,6 +95,11 @@ function loadCol(){
 $(document).ready(function(){
     loadCol();
 })
+
+
+
+
+
 
 // // 배열 선언
 //     var arrTitle = [];
