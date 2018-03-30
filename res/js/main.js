@@ -27,28 +27,35 @@ function getNow(){
 // 배열 선언
 var itemsArr = [];
 
-var index = 0;
+
+function getLastSeqNum(){
+    var storedItems = JSON.parse(localStorage.getItem('items'));
+    if (storedItems == null){
+        return 0;
+    }else if(storedItems.length > 0){
+        return storedItems.pop().seq;
+    }
+}
 
 // 새 게시물 등록
 function addNewCol(){
     var titleVal = inputTitle.val();
     var contentVal = inputContent.val();
 
-    if (titleVal !== '' && contentVal !== ''){
+    if (titleVal == '' || contentVal == ''){
+        alert('내용을 입력해주세요!');
+    }else{
         var item = {
-            seq: index,
+            seq: getLastSeqNum()+1,
             title: titleVal,
             content: contentVal,
             date: getNow()
         }
-        index = index + 1;
         itemsArr.push(item);
     
         console.log(itemsArr);
 
         saveItem();
-    }else{
-        alert('내용을 입력해주세요!');
     }
 }
 
@@ -67,9 +74,12 @@ function getTemplate(url, seq, title, date){
 function renderItem(){
     colList.html('');
     var storedItems = JSON.parse(localStorage.getItem('items'));
-    storedItems.forEach(function(e){
-        colList.append(getTemplate(getUrl(e.seq), e.seq, e.title, e.date));
-    })
+    if (storedItems !== null){
+        itemsArr = storedItems;
+        storedItems.forEach(function(e){
+            colList.append(getTemplate(getUrl(e.seq), e.seq, e.title, e.date));
+        })
+    }
 }
 
 
@@ -84,15 +94,17 @@ var colTitle = $('#colTitle');
 var colContent = $('#colContent');
 
 function loadCol(){
+    var storedItems = JSON.parse(localStorage.getItem('items'));
     var url = window.location.href;
     var seqNum = url.split('?seq=')[1];
-    var item = JSON.parse(localStorage.getItem('items'))[seqNum];
+    var item = storedItems[seqNum-1];
 
     colTitle.html(item.title);
     colContent.html(item.content);
 }
 
 $(document).ready(function(){
+    renderItem();
     loadCol();
 })
 
