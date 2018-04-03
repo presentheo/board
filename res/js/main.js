@@ -28,7 +28,7 @@ function getNow(){
 var itemsArr = [];
 
 // 스토리지에서 마지막 시퀀스 번호 따기
-function getLastSeqNum(){
+function getLastSeq(){
     var storedItems = JSON.parse(localStorage.getItem('items'));
     if (storedItems == null){
         return 0;
@@ -46,7 +46,7 @@ function addNewCol(){
         alert('내용을 입력해주세요!');
     }else{
         var item = {
-            seq: getLastSeqNum()+1, // 마지막 시퀀스 번호 +1 부여
+            seq: getLastSeq()+1, // 마지막 시퀀스 번호 +1 부여
             title: titleVal,
             content: contentVal,
             date: getNow()
