@@ -5,32 +5,13 @@ var inputContent = $('#inputContent');
 var saveBtn = $('#saveColumn');
 var colList = $('#colList');
 
-// 지금 몇시 몇분?
-function getNow(){
-    var now = new Date();
-    var year = now.getFullYear();
-    function getFullMonth(m){
-        if(m<10){
-            return '0'+m;
-        }else{
-            return m;
-        }
-    }
-    var month = getFullMonth(now.getMonth()+1);
-    var date = now.getDate();
-    var hour = now.getHours();
-    var minute = now.getMinutes();
-
-    return year+'-'+month+'-'+date+' '+hour+':'+minute;
-}
-
 // 배열 선언
 var itemsArr = [];
 
 // 스토리지에서 마지막 시퀀스 번호 따기
 function getLastSeq(){
     var storedItems = JSON.parse(localStorage.getItem('items'));
-    if (storedItems == null){
+    if (storedItems == null || storedItems.length == 0){
         return 0;
     }else if(storedItems.length > 0){
         return storedItems.pop().seq;
@@ -72,7 +53,13 @@ function saveItem(){
 
 // DOM엘리먼트 템플릿 등록
 function getTemplate(url, seq, title, date){
-    return '<li class="column-item"><a class="column-item-anchor" href="'+url+'" target="_blank"><div class="column-item-num"><span>'+seq+'</span></div><div class="column-item-title"><span>'+title+'</span></div><div class="column-item-date"><span>'+date+'</span></div></a></li>';
+    return '<li class="column-item"><a class="column-item-anchor" href="'+url+'"><div class="column-item-num"><span>'+seq+'</span></div><div class="column-item-title"><span>'+title+'</span></div><div class="column-item-date"><span>'+date+'</span></div></a><button class="btn btn-remove" data-index="'+seq+'">삭제</button></li>';
+}
+
+// url주소 치환
+function replaceUrl(num){
+    var url = window.location.href;
+    return (url.replace('board.html', 'column.html'))+'?seq='+num;
 }
 
 // 렌더링
@@ -87,30 +74,19 @@ function renderItem(){
     }
 }
 
-// url주소 치환
-function replaceUrl(n){
-    var url = window.location.href;
-    return (url.replace('board.html', 'column.html'))+'?seq='+n;
-}
-
-// 스토리지에 있는거 뿌려주는 로직
-var colTitle = $('#colTitle');
-var colContent = $('#colContent');
-
-function loadCol(){
-    var storedItems = JSON.parse(localStorage.getItem('items'));
-    var url = window.location.href;
-    var seqNum = url.split('?seq=')[1];
-    for (var i=0; i<storedItems.length; i++){
-        if (storedItems[i].seq == seqNum){
-            colTitle.html(storedItems[i].title);
-            colContent.html(storedItems[i].content);
+// 게시물 삭제
+$(document).on('click', '.btn-remove', function(){
+    var index = $(this).attr('data-index');
+    for (var i=0; i<itemsArr.length; i++){
+        if (itemsArr[i].seq == index){
+            itemsArr.splice(itemsArr.indexOf(itemsArr[i]), 1);
+            console.log(itemsArr);
         }
     }
-}
+    saveItem();
+})
 
 $(document).ready(function(){
     renderItem();
-    loadCol();
 });
 
