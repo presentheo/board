@@ -42,9 +42,11 @@ function addNewCol(){
     var titleVal = inputTitle.val();
     var contentVal = inputContent.val();
 
-    if (titleVal == '' || contentVal == ''){
-        alert('내용을 입력해주세요!');
-    }else{
+    if (titleVal == ''){
+        alert('제목을 입력해주세요!');
+    }else if(contentVal == ''){
+        alert('내용을 입력해주세요!')
+    }else if (titleVal !== '' && contentVal !== ''){
         var item = {
             seq: getLastSeq()+1, // 마지막 시퀀스 번호 +1 부여
             title: titleVal,
