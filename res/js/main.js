@@ -34,11 +34,15 @@ function addNewCol(){
             content: contentVal,
             date: getNow()
         };
+        // 배열에 삽입
         itemsArr.push(item);
-    
-        console.log(itemsArr);
 
-        saveItem();
+        // 입력창 초기화하고 포커스 
+        inputTitle.val('').focus();
+        inputContent.val('');
+
+        // 저장하고 렌더링
+        saveItem('items');
     }
 }
 
@@ -46,8 +50,8 @@ function addNewCol(){
 saveBtn.click(addNewCol);
 
 // 스토리지에 배열 저장하고 렌더링
-function saveItem(){
-    localStorage.setItem('items', JSON.stringify(itemsArr));
+function saveItem(key){
+    localStorage.setItem(key, JSON.stringify(itemsArr));
     renderItem();
 }
 
@@ -83,10 +87,10 @@ $(document).on('click', '.btn-remove', function(){
             console.log(itemsArr);
         }
     }
-    saveItem();
+    saveItem('items');
 })
 
 $(document).ready(function(){
     renderItem();
-});
+})
 

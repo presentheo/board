@@ -13,7 +13,7 @@
     border: 1px solid #ddd;
     cursor: pointer;
 }
-.btn:hover{
+.btn:hover, .btn:focus{
     background-color: #f2f2f2;
 }
 
