@@ -1,13 +1,21 @@
 // 전역변수 등록
-var inputComment = $('.comment-input');
+var commentInput;
 var commentList;
-
 
 var commentArr = [];
 
-var comment = {
-    column_seq: COLUMN_SEQ,
-    seq: COMMENT_SEQ,
-    content: COMMENT_CONTENT,
-    date: getNow()
-}
+
+function addNewComment(){
+    var comment = {
+        column_seq: getLastSeq('items'),
+        seq: getLastSeq('comments'),
+        content: COMMENT_CONTENT,
+        date: getNow()
+    }
+
+    commentArr.push(comment);
+}    
+
+function saveItem(){
+    localStorage.setItem('comments', commentArr);
+}    

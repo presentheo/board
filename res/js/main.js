@@ -9,8 +9,8 @@ var colList = $('#colList');
 var itemsArr = [];
 
 // 스토리지에서 마지막 시퀀스 번호 따기
-function getLastSeq(){
-    var storedItems = JSON.parse(localStorage.getItem('items'));
+function getLastSeq(key){
+    var storedItems = JSON.parse(localStorage.getItem(key));
     if (storedItems == null || storedItems.length == 0){
         return 0;
     }else if(storedItems.length > 0){
@@ -19,7 +19,7 @@ function getLastSeq(){
 }
 
 // 새 게시물 등록
-function addNewCol(){
+function addNewColumn(){
     var titleVal = inputTitle.val();
     var contentVal = inputContent.val();
 
@@ -29,7 +29,7 @@ function addNewCol(){
         alert('내용을 입력해주세요!')
     }else if (titleVal !== '' && contentVal !== ''){
         var item = {
-            seq: getLastSeq()+1, // 마지막 시퀀스 번호 +1 부여
+            seq: getLastSeq('items')+1, // 마지막 시퀀스 번호 +1 부여
             title: titleVal,
             content: contentVal,
             date: getNow()
@@ -41,22 +41,24 @@ function addNewCol(){
         inputTitle.val('').focus();
         inputContent.val('');
 
-        // 저장하고 렌더링
-        saveItem('items');
+        // 저장하고
+        saveItemToStorage('items');
+
+        // 렌더링
+        renderCol('items');
     }
 }
 
 // 저장 버튼에 이벤트 바인딩
-saveBtn.click(addNewCol);
+saveBtn.click(addNewColumn);
 
-// 스토리지에 배열 저장하고 렌더링
-function saveItem(key){
+// 스토리지에 배열 저장
+function saveItemToStorage(key){
     localStorage.setItem(key, JSON.stringify(itemsArr));
-    renderItem();
 }
 
 // DOM엘리먼트 템플릿 등록
-function getTemplate(url, seq, title, date){
+function getColumnTemplate(url, seq, title, date){
     return '<li class="column-item"><a class="column-item-anchor" href="'+url+'"><div class="column-item-num"><span>'+seq+'</span></div><div class="column-item-title"><span>'+title+'</span></div><div class="column-item-date"><span>'+date+'</span></div></a><button class="btn btn-remove" data-index="'+seq+'">삭제</button></li>';
 }
 
@@ -66,14 +68,14 @@ function replaceUrl(num){
     return (url.replace('board.html', 'column.html'))+'?seq='+num;
 }
 
-// 렌더링
-function renderItem(){
+// 컬럼 렌더링
+function renderCol(key){
     colList.html('');
-    var storedItems = JSON.parse(localStorage.getItem('items'));
+    var storedItems = JSON.parse(localStorage.getItem(key));
     if (storedItems !== null){
         itemsArr = storedItems;
         storedItems.forEach(function(e){
-            colList.append(getTemplate(replaceUrl(e.seq), e.seq, e.title, e.date));
+            colList.append(getColumnTemplate(replaceUrl(e.seq), e.seq, e.title, e.date));
         });
     }
 }
@@ -87,10 +89,10 @@ $(document).on('click', '.btn-remove', function(){
             console.log(itemsArr);
         }
     }
-    saveItem('items');
+    saveItemToStorage('items');
+    renderCol('items');
 })
 
 $(document).ready(function(){
-    renderItem();
+    renderCol('items');
 })
-
