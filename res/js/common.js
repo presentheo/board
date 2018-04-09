@@ -13,3 +13,4 @@ function getNow(){
 
     return year+'-'+month+'-'+date+' '+hour+':'+minute;
 }
+

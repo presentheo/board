@@ -3,7 +3,7 @@ var colTitle = $('#colTitle');
 var colContent = $('#colContent');
 
 function loadCol(){
-    var storedItems = JSON.parse(localStorage.getItem('items'));
+    var storedItems = getFromStorage('columns');
     var url = window.location.href;
     var seqNum = url.split('?seq=')[1];
     for (var i=0; i<storedItems.length; i++){

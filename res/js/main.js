@@ -6,17 +6,33 @@ var saveBtn = $('#saveColumn');
 var colList = $('#colList');
 
 // 배열 선언
-var itemsArr = [];
+var columnArr = [];
 
 // 스토리지에서 마지막 시퀀스 번호 따기
 function getLastSeq(key){
-    var storedItems = JSON.parse(localStorage.getItem(key));
+    var storedItems = getFromStorage(key);
     if (storedItems == null || storedItems.length == 0){
         return 0;
     }else if(storedItems.length > 0){
         return storedItems.pop().seq;
     }
 }
+
+// 스토리지에 배열 저장
+function saveToStorage(key, value){
+    localStorage.setItem(key, JSON.stringify(value));
+}
+
+// 스토리지에서 아이템 로드
+function getFromStorage(key){
+    var storedItem = localStorage.getItem(key);
+    if (storedItem == null){
+        return null;
+    }else if (storedItem !== null){
+        return JSON.parse(localStorage.getItem(key));
+    }
+}
+
 
 // 새 게시물 등록
 function addNewColumn(){
@@ -28,34 +44,29 @@ function addNewColumn(){
     }else if(contentVal == ''){
         alert('내용을 입력해주세요!')
     }else if (titleVal !== '' && contentVal !== ''){
-        var item = {
-            seq: getLastSeq('items')+1, // 마지막 시퀀스 번호 +1 부여
+        var column = {
+            seq: getLastSeq('columns')+1, // 마지막 시퀀스 번호 +1 부여
             title: titleVal,
             content: contentVal,
             date: getNow()
         };
         // 배열에 삽입
-        itemsArr.push(item);
+        columnArr.push(column);
 
         // 입력창 초기화하고 포커스 
         inputTitle.val('').focus();
         inputContent.val('');
 
         // 저장하고
-        saveItemToStorage('items');
+        saveToStorage('columns', columnArr);
 
         // 렌더링
-        renderCol('items');
+        renderCol();
     }
 }
 
 // 저장 버튼에 이벤트 바인딩
 saveBtn.click(addNewColumn);
-
-// 스토리지에 배열 저장
-function saveItemToStorage(key){
-    localStorage.setItem(key, JSON.stringify(itemsArr));
-}
 
 // DOM엘리먼트 템플릿 등록
 function getColumnTemplate(url, seq, title, date){
@@ -69,11 +80,12 @@ function replaceUrl(num){
 }
 
 // 컬럼 렌더링
-function renderCol(key){
+function renderCol(){
     colList.html('');
-    var storedItems = JSON.parse(localStorage.getItem(key));
+    var storedItems = getFromStorage('columns');
     if (storedItems !== null){
-        itemsArr = storedItems;
+        columnArr = storedItems;
+
         storedItems.forEach(function(e){
             colList.append(getColumnTemplate(replaceUrl(e.seq), e.seq, e.title, e.date));
         });
@@ -83,16 +95,16 @@ function renderCol(key){
 // 게시물 삭제
 $(document).on('click', '.btn-remove', function(){
     var index = $(this).attr('data-index');
-    for (var i=0; i<itemsArr.length; i++){
-        if (itemsArr[i].seq == index){
-            itemsArr.splice(itemsArr.indexOf(itemsArr[i]), 1);
-            console.log(itemsArr);
+    for (var i=0; i<columnArr.length; i++){
+        if (columnArr[i].seq == index){
+            columnArr.splice(columnArr.indexOf(columnArr[i]), 1);
+            console.log(columnArr);
         }
     }
-    saveItemToStorage('items');
-    renderCol('items');
+    saveToStorage('columns', columnArr);
+    renderCol();
 })
 
 $(document).ready(function(){
-    renderCol('items');
+    renderCol();
 })
