@@ -5,11 +5,10 @@ var commentSaveBtn = $('#commentSaveBtn');
 
 var commentArr = [];
 
-
 // 새로운 코멘트 등록
 function addNewComment(){
     var comment = {
-        column_seq: getLastSeq('items')+1,
+        column_seq: (window.location.href.split('').pop())*1,
         seq: getLastSeq('comments')+1,
         content: commentInput.val(),
         date: getNow()
@@ -32,12 +31,55 @@ function getCommentTemplate(seq, content, date){
 function renderComment(){
     commentList.html('');
     var storedComments = JSON.parse(localStorage.getItem('comments'));
-    storedComments.forEach(function(e){
-        commentList.append(getCommentTemplate(e.seq, e.content, e.date));
-    })
+    if (storedComments !== null){
+        commentArr = storedComments;
+        storedComments.forEach(function(e){
+            if (e.column_seq == (window.location.href.split('').pop())*1){
+                commentList.append(getCommentTemplate(e.seq, e.content, e.date));
+            }
+        })
+    }
 }
 
-// 코멘트 삭제
-function removeComment(){
-    
-}
+
+$(document).ready(function(){
+    renderComment();
+});
+
+
+// 임시 코드
+// let cols = [
+//     {
+//         col_seq: 1,
+//         col_title: '',
+//         col_content: '',
+//         comments: [
+//             {
+//                 comment_seq: 1,
+//                 comment_title: ''
+//             }
+//         ]
+//     }
+// ];
+
+// let colSeq;
+// let colTitle;
+// let colContent;
+
+
+// function addNewCol(){
+//     let col = {
+//         col_seq: colSeq,
+//         col_title: colTitle,
+//         col_content: colContent,
+//         comments: []
+//     }
+//     cols.push(col);
+// }
+
+// function addNewComment(){
+//     let comment = {
+//         comment_seq: commentSeq,
+//         comment_content: commentContent
+//     }
+// }
