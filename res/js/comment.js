@@ -5,26 +5,55 @@ var commentSaveBtn = $('#commentSaveBtn');
 
 var commentArr = [];
 
+
+function getCommentSeq(){
+    var storedComments = JSON.parse(localStorage.getItem('comments'));
+
+    if (storedComments == null){
+        return 0;
+    }else if (storedComments !== null){
+        var currentCommentArr = [];
+        storedComments.forEach(function(e){
+            if (e.column_seq === (window.location.href.split('').pop())*1){
+                currentCommentArr.push(e);
+            }
+        })
+        if (currentCommentArr.length == 0){
+            return 0;
+        }else if (currentCommentArr.length > 0){
+            return currentCommentArr.pop().seq;
+        }
+    }
+}
+
 // 새로운 코멘트 등록
 function addNewComment(){
     var comment = {
         column_seq: (window.location.href.split('').pop())*1,
-        seq: getLastSeq('comments')+1,
+        seq: getCommentSeq()+1,
         content: commentInput.val(),
         date: getNow()
     }
 
-    commentArr.push(comment);
+    if (comment.content.length == 0){
+        alert('내용을 입력해주세요!')
+    }else if(comment.content.length > 0){
+        commentArr.push(comment);
+    }
 
     // 스토리지에 저장하고 렌더링
     saveToStorage('comments', commentArr);
     renderComment();
+
+    // 입력창 초기화하고 포커스
+    commentInput.val('');
+    commentInput.focus();
 }    
 
 commentSaveBtn.click(addNewComment);
 
 function getCommentTemplate(seq, content, date){
-    return '<li class="comment-item"><div class="comment-num">'+seq+'</div><div class="comment-content">'+content+'</div><div class="comment-date">'+date+'</div><button class="btn btn-remove">삭제</button></li>';
+    return '<li class="comment-item"><div class="comment-num">댓글'+seq+'</div><div class="comment-content">'+content+'</div><div class="comment-date">'+date+'</div><button class="btn btn-remove-comment" data-index="'+seq+'">삭제</button></li>';
 }
 
 // 코멘트 렌더링
@@ -41,45 +70,19 @@ function renderComment(){
     }
 }
 
+// 코멘트 삭제
+$(document).on('click', '.btn-remove-comment', function(){
+    var index = $(this).attr('data-index');
+    for (var i=0; i<commentArr.length; i++){
+        if (commentArr[i].seq == index){
+            commentArr.splice(commentArr.indexOf(commentArr[i]), 1);
+        }
+    }
+    saveToStorage('comments', commentArr);
+    renderComment();
+})
+
 
 $(document).ready(function(){
     renderComment();
 });
-
-
-// 임시 코드
-// let cols = [
-//     {
-//         col_seq: 1,
-//         col_title: '',
-//         col_content: '',
-//         comments: [
-//             {
-//                 comment_seq: 1,
-//                 comment_title: ''
-//             }
-//         ]
-//     }
-// ];
-
-// let colSeq;
-// let colTitle;
-// let colContent;
-
-
-// function addNewCol(){
-//     let col = {
-//         col_seq: colSeq,
-//         col_title: colTitle,
-//         col_content: colContent,
-//         comments: []
-//     }
-//     cols.push(col);
-// }
-
-// function addNewComment(){
-//     let comment = {
-//         comment_seq: commentSeq,
-//         comment_content: commentContent
-//     }
-// }

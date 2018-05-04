@@ -97,10 +97,10 @@ $(document).on('click', '.btn-remove', function(){
     var index = $(this).attr('data-index');
     for (var i=0; i<columnArr.length; i++){
         if (columnArr[i].seq == index){
-            columnArr.splice(columnArr.indexOf(columnArr[i]), 1);
-            console.log(columnArr);
+            columnArr.splice(i, 1);
         }
     }
+
     saveToStorage('columns', columnArr);
     renderCol();
 })
@@ -108,3 +108,4 @@ $(document).on('click', '.btn-remove', function(){
 $(document).ready(function(){
     renderCol();
 })
+
